@@ -39,6 +39,7 @@
             // 
             // serviceInstaller1
             // 
+            this.serviceInstaller1.Description = "Softnet Proxy";
             this.serviceInstaller1.ServiceName = "Softnet.Proxy";
             this.serviceInstaller1.DisplayName = "Softnet.Proxy"; // +
             this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic; // +
