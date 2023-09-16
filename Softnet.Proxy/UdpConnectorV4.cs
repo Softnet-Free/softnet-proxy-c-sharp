@@ -171,6 +171,7 @@ namespace Softnet.Proxy
             long endpointKey = (c << 40) | (d << 32) | (e << 24) | (f << 16) | (g << 8) | h;
 
             UdpProxyV4 udpProxy = new UdpProxyV4(endpointKey, m_HostIEP, HostIEP);
+            udpProxy.Init();
             UdpDispatcher.RegisterProxyV4(endpointKey, udpProxy);
             Softnet.ServerKit.Monitor.Add(udpProxy);
 

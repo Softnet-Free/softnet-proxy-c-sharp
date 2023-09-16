@@ -146,6 +146,7 @@ namespace Softnet.Proxy
         {
             IEPv6Key endpointKey = new IEPv6Key(HostIEP);
             UdpProxyV6 udpProxy = new UdpProxyV6(endpointKey, m_HostIEP, HostIEP);
+            udpProxy.Init();
             UdpDispatcher.RegisterProxyV6(endpointKey, udpProxy);
             Softnet.ServerKit.Monitor.Add(udpProxy);
             return udpProxy;
