@@ -82,17 +82,17 @@ namespace Softnet.Proxy
                 else
                     Local_TCPv6v4_MSS = Local_TCPv4_MSS;
 
-                if (!(1000 <= serverConfig.TcpConfig.MaxBufferedPackets && serverConfig.TcpConfig.MaxBufferedPackets <= 100000))
-                    throw new ConfigurationErrorsException("The pool size for TCP SocketAsyncEventArgs must be in the range [1000 - 100000]");
+                if (!(1000 <= serverConfig.TcpConfig.MaxBufferedPackets && serverConfig.TcpConfig.MaxBufferedPackets <= 10000))
+                    throw new ConfigurationErrorsException("The pool size for TCP SocketAsyncEventArgs must be in the range [1000 - 10000]");
 
-                if (!(1000 <= serverConfig.UdpConfig.MaxBufferedPackets && serverConfig.UdpConfig.MaxBufferedPackets <= 100000))
-                    throw new ConfigurationErrorsException("The pool size for UDP SocketAsyncEventArgs must be in the range [1000 - 100000]");
+                if (!(1000 <= serverConfig.UdpConfig.MaxBufferedPackets && serverConfig.UdpConfig.MaxBufferedPackets <= 10000))
+                    throw new ConfigurationErrorsException("The pool size for UDP SocketAsyncEventArgs must be in the range [1000 - 10000]");
 
-                if (!(1452 <= serverConfig.UdpConfig.PacketSize && serverConfig.UdpConfig.PacketSize <= 8192))
-                    throw new ConfigurationErrorsException("The UDP packet size must be in the range [1452 - 8192]");
+                if (!(1452 <= serverConfig.UdpConfig.PacketSize && serverConfig.UdpConfig.PacketSize <= 65535))
+                    throw new ConfigurationErrorsException("The UDP packet size must be in the range [1452 - 65535]");
 
-                if (!(1000 <= serverConfig.MaxSessions && serverConfig.MaxSessions <= 1000000))
-                    throw new ConfigurationErrorsException("The maximum connection establishing sessions must be in the range [1000 - 1000000]");
+                if (!(1000 <= serverConfig.MaxSessions && serverConfig.MaxSessions <= 100000))
+                    throw new ConfigurationErrorsException("The maximum connection establishing sessions must be in the range [1000 - 100000]");
 
                 TCPSaeaPool.POOL_SIZE = serverConfig.TcpConfig.MaxBufferedPackets;
                 TCPSaeaPool.Init();
@@ -102,7 +102,7 @@ namespace Softnet.Proxy
                 UDPSaeaPool.Init();
 
                 CSaeaPool = new SaeaPool();
-                CSaeaPool.Init(serverConfig.MaxSessions, 128);
+                CSaeaPool.Init(serverConfig.MaxSessions, 256);
 
                 Softnet.ServerKit.TaskScheduler.Start();
                 Softnet.ServerKit.Monitor.Start(10);

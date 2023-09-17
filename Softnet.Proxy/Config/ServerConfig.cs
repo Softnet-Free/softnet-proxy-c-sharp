@@ -35,7 +35,7 @@ namespace Softnet.Proxy
             }
         }
 
-        [ConfigurationProperty("maxSessions", IsRequired = true)]
+        [ConfigurationProperty("maxSessions", IsRequired = true, DefaultValue = 10000)]
         public int MaxSessions
         {
             get
@@ -99,7 +99,7 @@ namespace Softnet.Proxy
 
     public class TcpConfigElement : ConfigurationElement
     {
-        [ConfigurationProperty("maxBufferedPackets", IsRequired = true)]
+        [ConfigurationProperty("maxBufferedPackets", IsRequired = true, DefaultValue = 3000)]
         public int MaxBufferedPackets
         {
             get
@@ -129,7 +129,7 @@ namespace Softnet.Proxy
 
     public class UdpConfigElement : ConfigurationElement
     {
-        [ConfigurationProperty("maxBufferedPackets", IsRequired = true)]
+        [ConfigurationProperty("maxBufferedPackets", IsRequired = true, DefaultValue = 1000)]
         public int MaxBufferedPackets
         {
             get
@@ -138,7 +138,7 @@ namespace Softnet.Proxy
             }
         }
 
-        [ConfigurationProperty("packetSize", IsRequired = false, DefaultValue = 4124)]
+        [ConfigurationProperty("packetSize", IsRequired = false, DefaultValue = 16384)]
         public int PacketSize
         {
             get

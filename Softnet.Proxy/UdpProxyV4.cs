@@ -91,7 +91,7 @@ namespace Softnet.Proxy
             }
         }
 
-        public void SendPacket(System.Net.Sockets.SocketAsyncEventArgs saea, int udpOffset, int size, long currentTime)
+        public void SendPacket(SocketAsyncEventArgs saea, int udpOffset, int size, long currentTime)
         {
             if (m_closed == false)
             {
@@ -101,7 +101,7 @@ namespace Softnet.Proxy
                 buffer[udpOffset] = UdpDispatcher.server_port_higher_byte;
                 buffer[udpOffset + 1] = UdpDispatcher.server_port_lower_byte;
                 buffer[udpOffset + 2] = host_port_higher_byte;
-                buffer[udpOffset + 3] = host_port_lower_byte;                
+                buffer[udpOffset + 3] = host_port_lower_byte;
 
                 buffer[udpOffset + 6] = 0;
                 buffer[udpOffset + 7] = 0;
