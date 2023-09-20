@@ -76,10 +76,10 @@ namespace Softnet.Proxy
             m_MsgSocket.Start();
         }
 
-        public void Shutdown(int errorCode)
+        public void Shutdown()
         {
             m_ConnectorState = ConnectorState.COMPLETED;
-            SoftnetMessage message = MsgBuilder.CreateErrorMessage(Constants.UdpConnector.ERROR, errorCode);
+            SoftnetMessage message = MsgBuilder.Create(Constants.UdpConnector.ERROR);
             m_MsgSocket.Send(message);
         }
 
@@ -88,10 +88,10 @@ namespace Softnet.Proxy
             m_MsgSocket.Close();
         }
 
-        public void AttachEndpoint(SocketAsyncEventArgs saea)
+        public bool AttachEndpoint(SocketAsyncEventArgs saea)
         {
             if (m_UdpEndpointAttached)
-                return;
+                return false;
 
             m_HostIEP = (IPEndPoint)saea.RemoteEndPoint;
             byte[] hostIep = new byte[18];
@@ -101,7 +101,7 @@ namespace Softnet.Proxy
             lock (mutex)
             {
                 if (m_UdpEndpointAttached)
-                    return;
+                    return false;
                 m_UdpEndpointAttached = true;
 
                 HostIEP = hostIep;
@@ -109,17 +109,15 @@ namespace Softnet.Proxy
                 if (m_ConnectorState == ConnectorState.AUTHENTICATED)
                     m_ConnectorState = ConnectorState.SETUP;
                 else
-                    return;
+                    return true;
             }
 
             if (m_ConnectorMode == ConnectorMode.CLIENT)
-            {
                 m_UdpControl.SetupClientConnector(this);
-            }
             else // m_ConnectorMode == ConnectorMode.SERVICE
-            {
                 m_UdpControl.SetupServiceConnector(this);
-            }
+
+            return true;
         }
 
         public void SetPeerConnector(IUdpConnector peerConnector)
@@ -152,51 +150,12 @@ namespace Softnet.Proxy
             return udpProxy;
         }
 
-        public void OnProxyEstablished()
+        public void OnProxyConnectionCreated()
         {
-            SendProxyEstablishingNotification(1);
+            m_MsgSocket.Send(MsgBuilder.Create(Constants.UdpConnector.PROXY_CONNECTION_CREATED));
         }
 
-        void SendProxyEstablishingNotification(object state)
-        {
-            SocketAsyncEventArgs saea = UDPSaeaPool.Get();
-            if (saea == null)
-                return;
-
-            byte[] buffer = saea.Buffer;
-            int offset = saea.Offset;
-
-            buffer[offset] = UdpDispatcher.server_port_higher_byte;
-            buffer[offset + 1] = UdpDispatcher.server_port_lower_byte;
-            buffer[offset + 2] = HostIEP[16];
-            buffer[offset + 3] = HostIEP[17];
-
-            buffer[offset + 4] = 0;
-            buffer[offset + 5] = 25;
-
-            buffer[offset + 6] = 0;
-            buffer[offset + 7] = 0;
-
-            buffer[offset + 8] = Constants.UdpEndpoint.PROXY_ESTABLISHED;
-            Buffer.BlockCopy(ByteConverter.GetBytes(EndpointUid), 0, buffer, offset + 9, 16);
-
-            byte[] pseudoHeader = UdpPseudoHeader.GetPHv6(m_HostIEP.Address);
-            UInt16 checksum = Algorithms.ChecksumUdpV6(pseudoHeader, buffer, offset, 25);
-            Buffer.BlockCopy(ByteConverter.GetBytes(checksum), 0, buffer, offset + 6, 2);
-
-            saea.SetBuffer(offset, 25);
-            saea.RemoteEndPoint = m_HostIEP;
-            RawUdpBindingV6.Send(saea);
-
-            int waitSeconds = (int)state;
-            if (waitSeconds <= 8)
-            {
-                ScheduledTask task = new ScheduledTask(SendProxyEstablishingNotification, this, waitSeconds * 2);
-                TaskScheduler.Add(task, waitSeconds);
-            }
-        }
-
-        void ProcessMessage_Client(byte[] message)
+        void ProcessMessage_ClientEndpoint(byte[] message)
         {
             SequenceDecoder asnSequence = ASNDecoder.Sequence(message, 1);
             m_ConnectionUid = ByteConverter.ToGuid(asnSequence.OctetString(16));
@@ -208,7 +167,7 @@ namespace Softnet.Proxy
             SendAuthKey();
         }
 
-        void ProcessMessage_Service(byte[] message)
+        void ProcessMessage_ServiceEndpoint(byte[] message)
         {
             SequenceDecoder asnSequence = ASNDecoder.Sequence(message, 1);
             m_ConnectionUid = ByteConverter.ToGuid(asnSequence.OctetString(16));
@@ -257,17 +216,13 @@ namespace Softnet.Proxy
                 }
 
                 if (m_ConnectorMode == ConnectorMode.CLIENT)
-                {
                     m_UdpControl.SetupClientConnector(this);
-                }
                 else // m_ConnectorMode == ConnectorMode.SERVICE
-                {
                     m_UdpControl.SetupServiceConnector(this);
-                }
             }
             else
             {
-                Shutdown(ErrorCodes.AUTH_FAILED);
+                Shutdown();
             }
         }
 
@@ -278,13 +233,13 @@ namespace Softnet.Proxy
                 byte messageTag = message[0];
                 if (m_ConnectorState == ConnectorState.INITIAL)
                 {
-                    if (messageTag == Constants.UdpConnector.CLIENT)
+                    if (messageTag == Constants.UdpConnector.CLIENT_ENDPOINT)
                     {
-                        ProcessMessage_Client(message);
+                        ProcessMessage_ClientEndpoint(message);
                     }
-                    else if (messageTag == Constants.UdpConnector.SERVICE)
+                    else if (messageTag == Constants.UdpConnector.SERVICE_ENDPOINT)
                     {
-                        ProcessMessage_Service(message);
+                        ProcessMessage_ServiceEndpoint(message);
                     }
                     else
                         Terminate();
@@ -302,11 +257,24 @@ namespace Softnet.Proxy
                 {
                     if (messageTag == Constants.UdpConnector.P2P_HOLE_PUNCHED)
                     {
-                        m_PeerConnector.SendMessage(MsgBuilder.Create(message));
+                        if (m_ConnectorMode == ConnectorMode.SERVICE)
+                            m_PeerConnector.SendMessage(MsgBuilder.Create(message));
+                        else
+                            Terminate();
                     }
-                    else if (messageTag == Constants.UdpConnector.P2P_FAILED)
+                    else if (messageTag == Constants.UdpConnector.P2P_CONNECTION_CREATED)
                     {
-                        m_UdpControl.OnP2PFailed();
+                        if (m_ConnectorMode == ConnectorMode.CLIENT)
+                            m_PeerConnector.SendMessage(MsgBuilder.Create(message));
+                        else
+                            Terminate();
+                    }
+                    else if (messageTag == Constants.UdpConnector.CREATE_PROXY_CONNECTION)
+                    {
+                        if (m_ConnectorMode == ConnectorMode.SERVICE)
+                            m_UdpControl.CreateProxyConnection();
+                        else
+                            Terminate();
                     }
                     else
                         Terminate();

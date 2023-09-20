@@ -202,7 +202,7 @@ namespace Softnet.Proxy
             int udpOffset = saea.Offset;
             int udpSize = saea.BytesTransferred;
 
-            if (udpSize == 25 && buffer[udpOffset + 8] == Constants.UdpEndpoint.ATTACH_TO_CONNECTOR)
+            if (udpSize == 25 && buffer[udpOffset + 8] == Constants.UdpEndpoint.ENDPOINT_INFO)
             {
                 Guid endpointUid = ByteConverter.ToGuid(buffer, udpOffset + 9);
                 UdpConnectorV6 connector = null;
@@ -225,31 +225,8 @@ namespace Softnet.Proxy
 
                 if (connector != null)
                 {
-                    connector.AttachEndpoint(saea);
-
-                    buffer[udpOffset + 2] = buffer[udpOffset];
-                    buffer[udpOffset + 3] = buffer[udpOffset + 1];
-                    buffer[udpOffset] = server_port_higher_byte;
-                    buffer[udpOffset + 1] = server_port_lower_byte;
-
-                    buffer[udpOffset + 4] = 0;
-                    buffer[udpOffset + 5] = 25;
-
-                    buffer[udpOffset + 6] = 0;
-                    buffer[udpOffset + 7] = 0;
-
-                    buffer[udpOffset + 8] = Constants.UdpEndpoint.ATTACHED;
-
-                    IPEndPoint remoteIEP = (IPEndPoint)saea.RemoteEndPoint;
-                    byte[] pseudoHeader = UdpPseudoHeader.GetPHv6(remoteIEP.Address);
-
-                    UInt16 checksum = Algorithms.ChecksumUdpV6(pseudoHeader, buffer, udpOffset, 25);
-                    Buffer.BlockCopy(ByteConverter.GetBytes(checksum), 0, buffer, udpOffset + 6, 2);
-
-                    saea.SetBuffer(udpOffset, 25);
-                    RawUdpBindingV6.Send(saea);
-
-                    return true;
+                    if(connector.AttachEndpoint(saea))
+                        return false;
                 }
             }
 
@@ -317,7 +294,7 @@ namespace Softnet.Proxy
         {
             byte[] buffer = saea.Buffer;
 
-            if (udpSize == 31 && buffer[udpOffset + 8] == Constants.UdpEndpoint.ATTACH_TO_CONNECTOR)
+            if (udpSize == 31 && buffer[udpOffset + 8] == Constants.UdpEndpoint.ENDPOINT_INFO)
             {
                 Guid endpointUid = ByteConverter.ToGuid(buffer, udpOffset + 9);
                 UdpConnectorV4 connector = null;
@@ -340,31 +317,8 @@ namespace Softnet.Proxy
 
                 if (connector != null)
                 {
-                    connector.AttachEndpoint(saea, udpOffset);
-
-                    buffer[udpOffset + 2] = buffer[udpOffset];
-                    buffer[udpOffset + 3] = buffer[udpOffset + 1];
-                    buffer[udpOffset] = server_port_higher_byte;
-                    buffer[udpOffset + 1] = server_port_lower_byte;
-
-                    buffer[udpOffset + 4] = 0;
-                    buffer[udpOffset + 5] = 25;
-
-                    buffer[udpOffset + 6] = 0;
-                    buffer[udpOffset + 7] = 0;
-
-                    buffer[udpOffset + 8] = Constants.UdpEndpoint.ATTACHED;
-
-                    IPEndPoint remoteIEP = (IPEndPoint)saea.RemoteEndPoint;
-                    byte[] pseudoHeader = UdpPseudoHeader.GetPHv4(remoteIEP.Address);
-
-                    UInt16 checksum = Algorithms.ChecksumUdpV4(pseudoHeader, buffer, udpOffset, 25);
-                    Buffer.BlockCopy(ByteConverter.GetBytes(checksum), 0, buffer, udpOffset + 6, 2);
-
-                    saea.SetBuffer(udpOffset, 25);
-                    RawUdpBindingV4.Send(saea);
-
-                    return true;
+                    if(connector.AttachEndpoint(saea, udpOffset))
+                        return false;
                 }
             }
             

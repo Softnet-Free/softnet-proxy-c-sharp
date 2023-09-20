@@ -58,27 +58,33 @@ namespace Softnet.Proxy
 
         public static class UdpConnector
         {
-            // Input
-            public const byte CLIENT = 1;
-            public const byte SERVICE = 2;
-            public const byte AUTH_HASH = 3;
-            public const byte P2P_FAILED = 4;
-            // Output
-            public const byte AUTH_KEY = 11;
-            public const byte CREATE_P2P_CONNECTION = 12;
-            public const byte CREATE_P2P_CONNECTION_IN_DUAL_MODE = 13;
-            public const byte ERROR = 14;
-            // Input/Output
-            public const byte P2P_HOLE_PUNCHED = 21;
-            public const byte P2P_LOCAL_HOLE_PUNCHED = 22;
+            // Client Output
+        	public const byte CLIENT_ENDPOINT = 1;
+        	// Service Output
+        	public const byte SERVICE_ENDPOINT = 2;
+        	// Input
+        	public const byte AUTH_HASH = 3;
+        	// Service Output
+        	public const byte CREATE_PROXY_CONNECTION = 4;        	            
+        	
+        	// Output
+            public const byte ERROR = 10;
+        	public const byte AUTH_KEY = 11;
+        	public const byte CREATE_P2P_CONNECTION = 12;
+        	public const byte CREATE_P2P_CONNECTION_IN_DUAL_MODE = 13;
+        	public const byte PROXY_CONNECTION_CREATED = 14;
+        	
+        	// Client Input / Service Output
+        	public const byte P2P_HOLE_PUNCHED = 21;        	            
+        	public const byte P2P_LOCAL_HOLE_PUNCHED = 22;        	            
+        	// Client Output / Service Input
+            public const byte P2P_CONNECTION_CREATED = 21;        	            
         }
 
         public static class UdpEndpoint        
         {
-        	// Input/Output
-        	public const byte ATTACH_TO_CONNECTOR = 86;
-        	public const byte ATTACHED = 87;
-            public const byte PROXY_ESTABLISHED = 90;    
+        	// Input
+            public const byte ENDPOINT_INFO = 86;
         }
     }
 }

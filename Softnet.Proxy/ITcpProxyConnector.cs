@@ -23,7 +23,7 @@ namespace Softnet.Proxy
         System.Net.Sockets.AddressFamily AddressFamily { get; }
         TCPOptions GetTCPOptions();
         void CreateProxyConnection(int serverPort);
-        void Shutdown(int errorCode);
+        void Shutdown();
         void Close();
     }
 }

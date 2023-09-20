@@ -83,10 +83,10 @@ namespace Softnet.Proxy
             m_MsgSocket.Send(MsgBuilder.Create(Constants.TcpConnector.CREATE_PROXY_CONNECTION, asnEncoder));
         }
 
-        public void Shutdown(int errorCode)
+        public void Shutdown()
         {
             m_ConnectorState = ConnectorState.SHUTDOWN;
-            SoftnetMessage message = MsgBuilder.CreateErrorMessage(Constants.TcpConnector.ERROR, errorCode);
+            SoftnetMessage message = MsgBuilder.Create(Constants.TcpConnector.ERROR);
             m_MsgSocket.Send(message);
         }
 
@@ -202,7 +202,7 @@ namespace Softnet.Proxy
             }
             else
             {
-                Shutdown(ErrorCodes.AUTH_FAILED);
+                Shutdown();
             }
         }
 

@@ -88,8 +88,8 @@ namespace Softnet.Proxy
                 clientProxy.SetPeerProxy(serviceProxy);
                 serviceProxy.SetPeerProxy(clientProxy);
 
-                m_ClientConnectorV6.OnProxyEstablished();
-                m_ServiceConnectorV4.OnProxyEstablished();
+                m_ClientConnectorV6.OnProxyConnectionCreated();
+                m_ServiceConnectorV4.OnProxyConnectionCreated();
             }
         }
 
@@ -134,8 +134,8 @@ namespace Softnet.Proxy
                 clientProxy.SetPeerProxy(serviceProxy);
                 serviceProxy.SetPeerProxy(clientProxy);
 
-                m_ClientConnectorV4.OnProxyEstablished();
-                m_ServiceConnectorV6.OnProxyEstablished();
+                m_ClientConnectorV4.OnProxyConnectionCreated();
+                m_ServiceConnectorV6.OnProxyConnectionCreated();
             }
         }
 
@@ -180,8 +180,8 @@ namespace Softnet.Proxy
                 clientProxy.SetPeerProxy(serviceProxy);
                 serviceProxy.SetPeerProxy(clientProxy);
 
-                m_ClientConnectorV4.OnProxyEstablished();
-                m_ServiceConnectorV6.OnProxyEstablished();
+                m_ClientConnectorV4.OnProxyConnectionCreated();
+                m_ServiceConnectorV6.OnProxyConnectionCreated();
             }
         }
 
@@ -226,8 +226,8 @@ namespace Softnet.Proxy
                 clientProxy.SetPeerProxy(serviceProxy);
                 serviceProxy.SetPeerProxy(clientProxy);
 
-                m_ClientConnectorV6.OnProxyEstablished();
-                m_ServiceConnectorV4.OnProxyEstablished();
+                m_ClientConnectorV6.OnProxyConnectionCreated();
+                m_ServiceConnectorV4.OnProxyConnectionCreated();
             }
         }
 
@@ -251,11 +251,11 @@ namespace Softnet.Proxy
             }
         }
 
-        public void OnP2PFailed()
+        public void CreateProxyConnection()
         {
             lock (mutex)
             {
-                if (m_HandshakeMode != HandshakeMode.P2P || m_ControlState != ControlState.HANDSHAKE)
+                if (m_ControlState != ControlState.HANDSHAKE || m_HandshakeMode != HandshakeMode.P2P)
                     return;
                 m_HandshakeMode = HandshakeMode.PROXY;
             }
@@ -268,8 +268,8 @@ namespace Softnet.Proxy
                 clientProxy.SetPeerProxy(serviceProxy);
                 serviceProxy.SetPeerProxy(clientProxy);
 
-                m_ClientConnectorV6.OnProxyEstablished();
-                m_ServiceConnectorV6.OnProxyEstablished();
+                m_ClientConnectorV6.OnProxyConnectionCreated();
+                m_ServiceConnectorV6.OnProxyConnectionCreated();
             }
             else
             {
@@ -279,8 +279,8 @@ namespace Softnet.Proxy
                 clientProxy.SetPeerProxy(serviceProxy);
                 serviceProxy.SetPeerProxy(clientProxy);
 
-                m_ClientConnectorV4.OnProxyEstablished();
-                m_ServiceConnectorV4.OnProxyEstablished();            
+                m_ClientConnectorV4.OnProxyConnectionCreated();
+                m_ServiceConnectorV4.OnProxyConnectionCreated();            
             }
         }
     }
