@@ -78,7 +78,7 @@ namespace Softnet.Proxy
         	public const byte P2P_HOLE_PUNCHED = 21;        	            
         	public const byte P2P_LOCAL_HOLE_PUNCHED = 22;        	            
         	// Client Output / Service Input
-            public const byte P2P_CONNECTION_CREATED = 21;        	            
+            public const byte P2P_CONNECTION_CREATED = 23;        	            
         }
 
         public static class UdpEndpoint        
