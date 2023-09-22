@@ -245,7 +245,10 @@ namespace Softnet.Proxy
                 {
                     if (message[0] == Constants.TcpConnector.P2P_FAILED)
                     {
-                        m_TcpControl.OnP2PFailed();
+                        if (m_ConnectorMode == ConnectorMode.SERVICE_P2P)
+                            m_TcpControl.OnP2PFailed();
+                        else
+                            Terminate();
                     }
                     else
                         Terminate();

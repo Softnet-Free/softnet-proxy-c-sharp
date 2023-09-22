@@ -34,19 +34,25 @@ namespace Softnet.Proxy
 
         public static class TcpConnector
         {
-            // Input
+           	// Client Output
             public const byte CLIENT_P2P = 1;
+        	// Service Output
             public const byte SERVICE_P2P = 2;
+        	// Client Output
             public const byte CLIENT_PROXY = 3;
+        	// Service Output
             public const byte SERVICE_PROXY = 4;
+        	// Input
             public const byte AUTH_HASH = 5;
+        	// Client Output
             public const byte P2P_FAILED = 6;
+
             // Output
+            public const byte ERROR = 10;
             public const byte AUTH_KEY = 11;
             public const byte CREATE_P2P_CONNECTION = 12;
             public const byte CREATE_P2P_CONNECTION_IN_DUAL_MODE = 13;
-            public const byte CREATE_PROXY_CONNECTION = 14;
-            public const byte ERROR = 15;
+            public const byte CREATE_PROXY_CONNECTION = 14;        	
         }
 
         public static class TcpProxy
