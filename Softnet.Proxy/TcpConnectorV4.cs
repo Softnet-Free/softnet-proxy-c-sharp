@@ -134,7 +134,11 @@ namespace Softnet.Proxy
             byte[] hostIep = asnSequence.OctetString(6);
             asnSequence.End();
 
-            if (ByteArray.Equals(hostIep, 0, PublicIEP, 0, 4) == false)
+            byte[] hostIp = new byte[4];
+            for (int i = 0; i < 4; i++)
+                hostIp[i] = (byte)~hostIep[i];
+
+            if (ByteArray.Equals(hostIp, 0, PublicIEP, 0, 4) == false)
                 PrivateIEP = hostIep;
 
             m_ConnectorState = ConnectorState.AUTH_REQUIRED;
@@ -150,7 +154,11 @@ namespace Softnet.Proxy
             byte[] hostIep = asnSequence.OctetString(6);
             asnSequence.End();
 
-            if (ByteArray.Equals(hostIep, 0, PublicIEP, 0, 4) == false)
+            byte[] hostIp = new byte[4];
+            for (int i = 0; i < 4; i++)
+                hostIp[i] = (byte)~hostIep[i];
+
+            if (ByteArray.Equals(hostIp, 0, PublicIEP, 0, 4) == false)
                 PrivateIEP = hostIep;
 
             m_ConnectorState = ConnectorState.AUTH_REQUIRED;
