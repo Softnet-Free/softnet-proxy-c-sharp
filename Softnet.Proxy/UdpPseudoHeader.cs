@@ -29,7 +29,7 @@ namespace Softnet.Proxy
         public static byte[] GetPHv6(IPAddress dstAddress)
         {
             byte[] header = new byte[40];
-            Buffer.BlockCopy(ServerRoot.LocalIPv6Bytes, 0, header, 0, 16);
+            Buffer.BlockCopy(WindowsBackgroundService.LocalIPv6Bytes, 0, header, 0, 16);
             Buffer.BlockCopy(dstAddress.GetAddressBytes(), 0, header, 16, 16);
             header[36] = 0;
             header[37] = 0;
@@ -42,7 +42,7 @@ namespace Softnet.Proxy
         public static byte[] GetPHv4(IPAddress dstAddress)
         {
             byte[] header = new byte[12];
-            Buffer.BlockCopy(ServerRoot.LocalIPv4Bytes, 0, header, 0, 4);
+            Buffer.BlockCopy(WindowsBackgroundService.LocalIPv4Bytes, 0, header, 0, 4);
             Buffer.BlockCopy(dstAddress.GetAddressBytes(), 0, header, 4, 4);
             header[8] = 0;
             header[9] = 17; // protocol number

@@ -459,26 +459,26 @@ namespace Softnet.Proxy
             {
                 if (m_ClientProxyConnector.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
                 {
-                    serviceMSS = serviceConnectorTCPOptions.MSS <= ServerRoot.Local_TCPv6_MSS ? serviceConnectorTCPOptions.MSS : ServerRoot.Local_TCPv6_MSS;
-                    clientMSS = clientConnectorTCPOptions.MSS <= ServerRoot.Local_TCPv6_MSS ? clientConnectorTCPOptions.MSS : ServerRoot.Local_TCPv6_MSS;
+                    serviceMSS = serviceConnectorTCPOptions.MSS <= WindowsBackgroundService.Local_TCPv6_MSS ? serviceConnectorTCPOptions.MSS : WindowsBackgroundService.Local_TCPv6_MSS;
+                    clientMSS = clientConnectorTCPOptions.MSS <= WindowsBackgroundService.Local_TCPv6_MSS ? clientConnectorTCPOptions.MSS : WindowsBackgroundService.Local_TCPv6_MSS;
                 }
                 else
                 {
-                    serviceMSS = serviceConnectorTCPOptions.MSS <= ServerRoot.Local_TCPv6v4_MSS ? serviceConnectorTCPOptions.MSS : ServerRoot.Local_TCPv6v4_MSS;
-                    clientMSS = clientConnectorTCPOptions.MSS <= ServerRoot.Local_TCPv6v4_MSS ? clientConnectorTCPOptions.MSS : ServerRoot.Local_TCPv6v4_MSS;
+                    serviceMSS = serviceConnectorTCPOptions.MSS <= WindowsBackgroundService.Local_TCPv6v4_MSS ? serviceConnectorTCPOptions.MSS : WindowsBackgroundService.Local_TCPv6v4_MSS;
+                    clientMSS = clientConnectorTCPOptions.MSS <= WindowsBackgroundService.Local_TCPv6v4_MSS ? clientConnectorTCPOptions.MSS : WindowsBackgroundService.Local_TCPv6v4_MSS;
                 }
             }
             else
             {
                 if (m_ClientProxyConnector.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                 {
-                    serviceMSS = serviceConnectorTCPOptions.MSS <= ServerRoot.Local_TCPv4_MSS ? serviceConnectorTCPOptions.MSS : ServerRoot.Local_TCPv4_MSS;
-                    clientMSS = clientConnectorTCPOptions.MSS <= ServerRoot.Local_TCPv4_MSS ? clientConnectorTCPOptions.MSS : ServerRoot.Local_TCPv4_MSS;
+                    serviceMSS = serviceConnectorTCPOptions.MSS <= WindowsBackgroundService.Local_TCPv4_MSS ? serviceConnectorTCPOptions.MSS : WindowsBackgroundService.Local_TCPv4_MSS;
+                    clientMSS = clientConnectorTCPOptions.MSS <= WindowsBackgroundService.Local_TCPv4_MSS ? clientConnectorTCPOptions.MSS : WindowsBackgroundService.Local_TCPv4_MSS;
                 }
                 else
                 {
-                    serviceMSS = serviceConnectorTCPOptions.MSS <= ServerRoot.Local_TCPv6v4_MSS ? serviceConnectorTCPOptions.MSS : ServerRoot.Local_TCPv6v4_MSS;
-                    clientMSS = clientConnectorTCPOptions.MSS <= ServerRoot.Local_TCPv6v4_MSS ? clientConnectorTCPOptions.MSS : ServerRoot.Local_TCPv6v4_MSS;
+                    serviceMSS = serviceConnectorTCPOptions.MSS <= WindowsBackgroundService.Local_TCPv6v4_MSS ? serviceConnectorTCPOptions.MSS : WindowsBackgroundService.Local_TCPv6v4_MSS;
+                    clientMSS = clientConnectorTCPOptions.MSS <= WindowsBackgroundService.Local_TCPv6v4_MSS ? clientConnectorTCPOptions.MSS : WindowsBackgroundService.Local_TCPv6v4_MSS;
                 }
             }
 

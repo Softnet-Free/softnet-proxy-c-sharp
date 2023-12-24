@@ -105,7 +105,7 @@ namespace Softnet.Proxy
                             else
                             {
                                 ScheduledTask task = new ScheduledTask(TryReceiveAsync, null);
-                                TaskScheduler.Add(task, 2);
+                                Softnet.ServerKit.TaskScheduler.Add(task, 2);
                             }
 
                             return;
@@ -140,7 +140,7 @@ namespace Softnet.Proxy
                 else
                 {
                     ScheduledTask task = new ScheduledTask(TryReceiveAsync, null);
-                    TaskScheduler.Add(task, 2);
+                    Softnet.ServerKit.TaskScheduler.Add(task, 2);
                 }
             }
             catch (ObjectDisposedException) { }

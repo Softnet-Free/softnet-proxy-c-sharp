@@ -52,7 +52,7 @@ namespace Softnet.Proxy
             ProxyV4List = new Dictionary<long, TcpProxyV4>();
 
             ScheduledTask task = new ScheduledTask(RemoveExpiredItems, null);
-            TaskScheduler.Add(task, 60);
+            Softnet.ServerKit.TaskScheduler.Add(task, 60);
 
             BuildTCPOptionsTable();
         }
@@ -132,7 +132,7 @@ namespace Softnet.Proxy
             }
 
             ScheduledTask task = new ScheduledTask(RemoveExpiredItems, null);
-            TaskScheduler.Add(task, 10);
+            Softnet.ServerKit.TaskScheduler.Add(task, 10);
         }
 
         public static TcpControl GetControl(Guid connectionUid)

@@ -176,7 +176,7 @@ namespace Softnet.Proxy
             byte[] authKey2 = asnSequence.OctetString(20);
             asnSequence.End();
 
-            byte[] authHash = PasswordHash.Compute(m_AuthKey, authKey2, ServerRoot.SecretKey);
+            byte[] authHash = PasswordHash.Compute(m_AuthKey, authKey2, WindowsBackgroundService.SecretKey);
 
             if (authHashReceived.SequenceEqual(authHash))
             {

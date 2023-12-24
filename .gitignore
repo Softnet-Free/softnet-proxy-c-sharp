@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# *.dll files
+Asn1Codec.dll
+Softnet.ServerKit.dll
+
 # User-specific files
 *.rsuser
 *.suo

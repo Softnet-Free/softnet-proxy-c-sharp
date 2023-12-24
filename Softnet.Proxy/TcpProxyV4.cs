@@ -504,7 +504,7 @@ namespace Softnet.Proxy
             }
 
             m_ComplementRepeatTask = new ScheduledTask(SendComplement, waitSeconds);
-            TaskScheduler.Add(m_ComplementRepeatTask, waitSeconds);
+            Softnet.ServerKit.TaskScheduler.Add(m_ComplementRepeatTask, waitSeconds);
 
             byte[] segment = saea.Buffer;
             int dataOffset = saea.Offset + 20;

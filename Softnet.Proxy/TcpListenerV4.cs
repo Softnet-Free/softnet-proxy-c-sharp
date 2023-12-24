@@ -55,25 +55,25 @@ namespace Softnet.Proxy
         {
             while (s_running)
             {
-                SocketAsyncEventArgs saea = ServerRoot.CSaeaPool.Get();
+                SocketAsyncEventArgs saea = WindowsBackgroundService.CSaeaPool.Get();
                 if (saea != null)
                 {
                     try
                     {
                         Socket socket = s_serverSocket.Accept();
 
-                        var msgSocket = new MsgSocket(socket, saea, ServerRoot.CSaeaPool);
+                        var msgSocket = new MsgSocket(socket, saea, WindowsBackgroundService.CSaeaPool);
                         var connector = new TcpConnectorV4(msgSocket);
                         TcpDispatcher.RegisterConnector(connector);
                         connector.Init((IPEndPoint)socket.RemoteEndPoint);
                     }
                     catch (SocketException)
                     {
-                        ServerRoot.CSaeaPool.Add(saea);
+                        WindowsBackgroundService.CSaeaPool.Add(saea);
                     }
                     catch (ObjectDisposedException)
                     {
-                        ServerRoot.CSaeaPool.Add(saea);
+                        WindowsBackgroundService.CSaeaPool.Add(saea);
                         return;
                     }
                 }

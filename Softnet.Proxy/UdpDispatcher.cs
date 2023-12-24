@@ -52,7 +52,7 @@ namespace Softnet.Proxy
             server_port_lower_byte = port_bytes[1];
 
             ScheduledTask task = new ScheduledTask(RemoveExpiredItems, null);
-            TaskScheduler.Add(task, 60);
+            Softnet.ServerKit.TaskScheduler.Add(task, 60);
         }
 
         public static void Clear()
@@ -116,7 +116,7 @@ namespace Softnet.Proxy
             }
 
             ScheduledTask task = new ScheduledTask(RemoveExpiredItems, null);
-            TaskScheduler.Add(task, 10);
+            Softnet.ServerKit.TaskScheduler.Add(task, 10);
         }
 
         public static UdpControl GetControl(Guid connectionUid)
